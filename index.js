@@ -1,70 +1,40 @@
 import express from "express";
-import dotenv from "dotenv";
 import cors from "cors";
 import path from "path";
 import { fileURLToPath } from "url";
-import { dbConnection } from "./src/database/config.js";
-import { syncModels } from "./src/database/syncModels.js"; // nombre correcto aquí
-import usuarioRoutes from "./src/routes/usuario.routes.js"; // Asegúrate de que la ruta sea correcta
-import permisoRoutes from "./src/routes/permiso.routes.js";
-import rolPermisoRoutes from "./src/routes/rolPermiso.routes.js";
-import rolRoutes from "./src/routes/roles.routes.js";
-import productRoutes from "./src/routes/productos.routes.js";
-import imgRoutes from "./src/routes/imagenProducto.routes.js";
-import catRoutes from "./src/routes/categoria.routes.js";
-import pubRoutes from "./src/routes/public.routes.js";
-import opcRoutes from "./src/routes/opciones.routes.js"
-import pedRoutes from "./src/routes/pedido.routes.js"
-dotenv.config();
+import { syncModels, dbConnection } from "./src/database/syncModels.js";
+import { config } from "./src/config/config.js";
+import usuarioRoutes from "./src/routes/usuario.routes.js";
+import { swaggerUiServe, swaggerUiSetup } from "./src/config/swagger.js";
 
-const app = express(); // Crear instancia de express
+const app = express();
 
 // Middleware de CORS
 app.use(
   cors({
-    origin: [
-      "https://pasteleriajazmin.net.pe",
-      "https://www.pasteleriajazmin.net.pe",
-      "https://pasteleriajazmin.net.pe/",
-      "https://www.pasteleriajazmin.net.pe/",
-      "http://localhost:3000/",
-      "http://localhost:3000",
-      "http://localhost:5173"
-      
-    ],
+    origin: "*",
     methods: ["POST", "GET", "PUT", "DELETE", "PATCH"],
     allowedHeaders: ["Content-Type", "x-token", "Authorization"],
   })
 );
 
+// Middleware para parsear JSON y formularios
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Obtener __dirname en módulos ES
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const publicPath = path.join(__dirname, "src", "public");
 
 // Servir archivos estáticos
+const publicPath = path.join(__dirname, "src", "public");
 app.use("/public", express.static(publicPath));
 
-// Iniciar conexión y sincronización con la base de datos
-dbConnection().then(syncModels);
+// Rutas de la API
+app.use("/api", usuarioRoutes);
+app.use("/api-docs", swaggerUiServe, swaggerUiSetup);
 
-// Rutas de la API (puedes completar después)
-console.log("Cargando rutas de categoría");
-app.use("/api/cat", catRoutes);
-app.use("/api/user",usuarioRoutes );
-app.use("/api/permisos", permisoRoutes);
-app.use("/api/rolPerm", rolPermisoRoutes);
-app.use("/api/roles", rolRoutes);
-app.use("/api/cat", catRoutes);
-app.use("/api/products",  productRoutes);
-app.use("/api/img",   imgRoutes);
-app.use("/api/publica",   pubRoutes);
-app.use("/api/opc",   opcRoutes);
-app.use("/api/ped",   pedRoutes);
-// app.use("/api/categorias", categoriaRoutes);
+
 
 // Ruta 404
 app.use((req, res, next) => {
@@ -77,9 +47,15 @@ app.use((err, req, res, next) => {
   res.status(500).json({ message: "Error interno del servidor" });
 });
 
- 
-// ...existing code...
-app.listen(process.env.PORT || 4001, '0.0.0.0', () => {
-  console.log('Servidor corriendo en el puerto', process.env.PORT || 4001);
-});
-// ...existing code...
+// Iniciar conexión y sincronización con la base de datos antes de arrancar el servidor
+dbConnection()
+  .then(syncModels)
+  .then(() => {
+    app.listen(config.port, "0.0.0.0", () => {
+      console.log("Servidor corriendo en el puerto", config.port);
+    });
+  })
+  .catch((error) => {
+    console.error("❌ Error al iniciar la aplicación:", error);
+    process.exit(1);
+  });

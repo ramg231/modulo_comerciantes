@@ -1,4 +1,5 @@
 import jwt from "jsonwebtoken";
+import { config } from "../config/config.js";
 
 export const validarJWT = (req, res, next) => {
   const token = req.header("x-token");
@@ -10,19 +11,15 @@ export const validarJWT = (req, res, next) => {
   }
 
   try {
-     const {id,nombre, rol,email } = jwt.verify(
-                token,
-                process.env.SECRET_JWT_SEED
-            );
+    const { id, nombre, rol, email } = jwt.verify(
+      token,
+      config.secretJwtSeed // Usar la semilla desde config.js
+    );
 
-    // Puedes modificar según los campos que tengas
-    
-        req.id = id;
-        req.nombre = nombre;
-        req.rol = rol;
-        req.email= email;
-      
-   
+    req.id = id;
+    req.nombre = nombre;
+    req.rol = rol;
+    req.email = email;
 
     next();
   } catch (error) {

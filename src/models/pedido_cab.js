@@ -11,3 +11,5 @@ export default (sequelize, DataTypes) => {
     fech_act: { type: DataTypes.DATE, allowNull: true }
   });
 };
+
+ 
