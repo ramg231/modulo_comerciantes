@@ -6,6 +6,7 @@ export default (sequelize, DataTypes) => {
     nombre_archivo: { type: DataTypes.STRING(100), allowNull: false }, // Máximo 100 caracteres
     orden: { type: DataTypes.INTEGER, defaultValue: 1 }
   }, {
-    freezeTableName: true // <-- evita la pluralización
-  });
+  freezeTableName: true,
+  timestamps: false // <--- esto elimina createdAt y updatedAt
+});
 };

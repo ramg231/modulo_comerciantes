@@ -4,6 +4,7 @@ export default (sequelize, DataTypes) => {
     nombre: { type: DataTypes.STRING(45), allowNull: false },
     descrip: { type: DataTypes.STRING(45), allowNull: true }
   }, {
-    freezeTableName: true // <-- evita la pluralización
-  });
+   freezeTableName: true,
+  timestamps: false // <--- esto elimina createdAt y updatedAt
+});
 };

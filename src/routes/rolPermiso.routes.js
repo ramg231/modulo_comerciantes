@@ -7,7 +7,7 @@ import {
 
 const router = express.Router();
 
-router.post("rolpermiso/", asignarPermisos);
-router.get("rolpermiso/:rol_id", obtenerPermisosPorRol);
+router.post("/rolpermiso/asignar", asignarPermisos);
+router.get("/rolpermiso/:rol_id", obtenerPermisosPorRol);
 
 export default router;

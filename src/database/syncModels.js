@@ -73,12 +73,17 @@ Usuarios.hasOne(Rol, { foreignKey: 'rol_id' });
 Rol.belongsTo(Usuarios, { foreignKey: 'rol_id' });
 
 // Rol - RolPermiso
-Rol.hasMany(RolPermiso, { foreignKey: 'rol_id' });
+Rol.hasMany(RolPermiso, { foreignKey: 'rol_id', as: 'rolPermisos' });
 RolPermiso.belongsTo(Rol, { foreignKey: 'rol_id' });
 
+
 // Permisos - RolPermiso
-Permiso.hasMany(RolPermiso, { foreignKey: 'permiso_id' });
+Permiso.hasMany(RolPermiso, { foreignKey: 'permiso_id', as: 'permisoRolPermisos' });
 RolPermiso.belongsTo(Permiso, { foreignKey: 'permiso_id' });
+
+  // Relación muchos a muchos entre Rol y Permiso
+Rol.belongsToMany(Permiso, { through: RolPermiso, as: 'Permisos', foreignKey: 'rol_id' });
+Permiso.belongsToMany(Rol, { through: RolPermiso, as: 'Roles', foreignKey: 'permiso_id' });
 
 // Comerciantes - ComerCat
 Comerciantes.hasMany(ComerCat, { foreignKey: 'comerciante_id' });

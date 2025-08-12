@@ -3,7 +3,7 @@ import { Permiso } from "../database/syncModels.js";
  
 export const crearPermiso = async (req, res) => {
   try {
-    const { nombre, descripcion } = req.body;
+    const { nombre, descripcion="" } = req.body;
 
     const existe = await Permiso.findOne({ where: { nombre } });
     if (existe) return res.status(400).json({ message: "Permiso ya existe" });
@@ -11,8 +11,7 @@ export const crearPermiso = async (req, res) => {
     const permiso = await Permiso.create({ nombre, descripcion });
 
     res.status(201).json({
-      message: "Permiso creado con éxito",
-      permiso,
+      message: "Permiso creado con éxito"
     });
   } catch (error) {
     console.error(error);
@@ -22,8 +21,10 @@ export const crearPermiso = async (req, res) => {
 
 export const listarPermisos = async (req, res) => {
   try {
-    const permisos = await Permiso.findAll();
-    res.json(permisos);
+    const permisos = await Permiso.findAll({
+      attributes: ['id', 'nombre']
+    });
+    res.status(200).json(permisos);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Error al listar permisos" });

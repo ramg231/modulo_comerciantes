@@ -9,6 +9,7 @@ export default (sequelize, DataTypes) => {
     fech_creac: { type: DataTypes.DATE, allowNull: true },
     fech_act: { type: DataTypes.DATE, allowNull: true }
   }, {
-    freezeTableName: true // <-- evita la pluralización
-  });
+    freezeTableName: true,
+  timestamps: false // <--- esto elimina createdAt y updatedAt
+});
 };

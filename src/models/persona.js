@@ -7,6 +7,7 @@ export default (sequelize, DataTypes) => {
     fech_nacimiento: { type: DataTypes.DATE, allowNull: true },
     celular: { type: DataTypes.STRING(10), allowNull: true }
   }, {
-    freezeTableName: true // <-- evita la pluralización
-  });
+    freezeTableName: true,
+  timestamps: false // <--- esto elimina createdAt y updatedAt
+});
 };

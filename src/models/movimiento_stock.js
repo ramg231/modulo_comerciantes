@@ -7,6 +7,7 @@ export default (sequelize, DataTypes) => {
     creacion_id: { type: DataTypes.INTEGER, allowNull: true },
     fech_crea: { type: DataTypes.DATE, allowNull: true }
   }, {
-    freezeTableName: true // <-- evita la pluralización
-  });
+   freezeTableName: true,
+  timestamps: false // <--- esto elimina createdAt y updatedAt
+});
 };

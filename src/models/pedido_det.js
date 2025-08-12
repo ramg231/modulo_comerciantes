@@ -7,6 +7,7 @@ export default (sequelize, DataTypes) => {
     cantidad: { type: DataTypes.INTEGER, allowNull: true },
     precio: { type: DataTypes.DECIMAL, allowNull: true }
 }, {
-    freezeTableName: true // <-- evita la pluralización
-  });
+  freezeTableName: true,
+  timestamps: false // <--- esto elimina createdAt y updatedAt
+});
 };
