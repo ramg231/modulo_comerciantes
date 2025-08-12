@@ -69,8 +69,8 @@ Usuarios.belongsTo(Persona, { foreignKey: 'persona_id' });
 
 
 // Usuarios - Roles
-Usuario.hasOne(Rol, { foreignKey: 'rol_id' });
-Rol.belongsTo(Usuario, { foreignKey: 'rol_id' });
+Usuarios.hasOne(Rol, { foreignKey: 'rol_id' });
+Rol.belongsTo(Usuarios, { foreignKey: 'rol_id' });
 
 // Rol - RolPermiso
 Rol.hasMany(RolPermiso, { foreignKey: 'rol_id' });
@@ -103,7 +103,7 @@ ImagenProducto.belongsTo(Producto, { foreignKey: 'producto_id' });
 
 // Producto - Pedido
 Producto.hasMany(Pedidodet, { foreignKey: 'producto_id' });
-Pedidodet.belongsTo(Producto, { foreignKey: 'producto_id' });
+Pedidodet.belongsTo(Producto, { foreignKey: 'producto', as: 'productoRef' });
 
 //PedidoCab - PedidoDet
 Pedidocab.hasMany(Pedidodet, { foreignKey: 'pedcab_id' });
@@ -113,8 +113,6 @@ export const db = {
   sequelize,
  
 };
-
-
 
 // Función para sincronizar los modelos
 export const syncModels = async () => {

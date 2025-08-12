@@ -1,5 +1,5 @@
 // src/middlewares/tienePermiso.js
-import { Usuario, Rol, Permiso } from "../database/syncModels.js";
+import { Usuarios, Rol, Permiso } from "../database/syncModels.js";
 
 export const tienePermiso = (permisoRequerido) => {
   return async (req, res, next) => {
@@ -7,7 +7,7 @@ export const tienePermiso = (permisoRequerido) => {
       const usuarioId = req.id; // ya seteado por validarJWT
 
       // Obtener usuario con rol
-      const usuario = await Usuario.findByPk(usuarioId, {
+      const usuario = await Usuarios.findByPk(usuarioId, {
         include: {
           model: Rol,
           include: {

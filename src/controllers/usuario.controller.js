@@ -1,4 +1,4 @@
-import {  Usuario,Rol} from "../database/syncModels.js";
+import {  Usuarios,Rol} from "../database/syncModels.js";
  
 import bcrypt from 'bcrypt';
 import { generarJWT } from '../helpers/jwt.js';
@@ -13,7 +13,7 @@ export const crearUsuario = async (req, res) => {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt); // 🔒
 
-    const nuevoUsuario = await Usuario.create({
+    const nuevoUsuario = await Usuarios.create({
       nombre,
       email,
       password: hashedPassword, // almacenas el hash
@@ -43,7 +43,7 @@ export const loginUsuario = async (req, res) => {
     const { email, password } = req.body;
 
     // Verificar si existe el usuario
-    const usuario = await Usuario.findOne({ where: { email } });
+    const usuario = await Usuarios.findOne({ where: { email } });
     if (!usuario) {
       return res.status(404).json({ message: 'Correo no registrado' });
     }
@@ -111,7 +111,7 @@ export const revalidarToken = async (req, res) => {
 // Obtener todos los usuarios
 export const listarUsuarios = async (req, res) => {
   try {
-    const usuarios = await Usuario.findAll({
+    const usuarios = await Usuarios.findAll({
       attributes: ["id", "nombre", "email", "activo", "rol_id"],
       include: {
         model: Rol,
@@ -137,7 +137,7 @@ export const listarUsuarios = async (req, res) => {
 // Obtener un usuario por ID
 export const obtenerUsuario = async (req, res) => {
   try {
-    const usuario = await Usuario.findByPk(req.params.id, {
+    const usuario = await Usuarios.findByPk(req.params.id, {
       include: { model: Rol, attributes: ["nombre"] },
     });
 
@@ -162,7 +162,7 @@ export const obtenerUsuario = async (req, res) => {
 export const actualizarUsuario = async (req, res) => {
   try {
     const { id } = req.params;
-    const usuario = await Usuario.findByPk(id);
+    const usuario = await Usuarios.findByPk(id);
 
     if (!usuario) {
       return res.status(404).json({ message: "Usuario no encontrado" });
@@ -187,7 +187,7 @@ export const actualizarUsuario = async (req, res) => {
 export const desactivarUsuario = async (req, res) => {
   try {
     const { id } = req.params;
-    const usuario = await Usuario.findByPk(id);
+    const usuario = await Usuarios.findByPk(id);
 
     if (!usuario) {
       return res.status(404).json({ message: "Usuario no encontrado" });
