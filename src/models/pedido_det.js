@@ -6,5 +6,7 @@ export default (sequelize, DataTypes) => {
     producto: { type: DataTypes.STRING(45), allowNull: true },
     cantidad: { type: DataTypes.INTEGER, allowNull: true },
     precio: { type: DataTypes.DECIMAL, allowNull: true }
+}, {
+    freezeTableName: true // <-- evita la pluralización
   });
 };

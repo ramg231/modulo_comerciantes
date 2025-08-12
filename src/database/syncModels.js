@@ -101,9 +101,10 @@ MovimientoStock.belongsTo(Producto, { foreignKey: 'producto_id' });
 Producto.hasMany(ImagenProducto, { foreignKey: 'producto_id' });
 ImagenProducto.belongsTo(Producto, { foreignKey: 'producto_id' });   
 
+
 // Producto - Pedido
 Producto.hasMany(Pedidodet, { foreignKey: 'producto_id' });
-Pedidodet.belongsTo(Producto, { foreignKey: 'producto', as: 'productoRef' });
+Pedidodet.belongsTo(Producto, { foreignKey: 'producto_id', as: 'productoRef' }); // <--- alias cambiado
 
 //PedidoCab - PedidoDet
 Pedidocab.hasMany(Pedidodet, { foreignKey: 'pedcab_id' });

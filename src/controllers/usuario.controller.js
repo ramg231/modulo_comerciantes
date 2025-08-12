@@ -1,41 +1,127 @@
-import {  Usuarios,Rol} from "../database/syncModels.js";
+import { Persona,Comerciantes,Usuarios,Rol} from "../database/syncModels.js";
  
 import bcrypt from 'bcrypt';
 import { generarJWT } from '../helpers/jwt.js';
- 
-export const crearUsuario = async (req, res) => {
-  try {
-    const { nombre, email, password, rol_id } = req.body;
 
-    const existe = await Usuario.findOne({ where: { email } });
-    if (existe) return res.status(400).json({ message: "Correo ya registrado" });
+// Crear persona y comerciante
+ const crearPersonaComerciante = async (personaData, comercianteData) => {
+  try {
+    const persona = await Persona.create({
+      nombre: personaData.nombre,
+      apellidos: personaData.apellidos,
+      genero: personaData.genero,
+      fech_nacimiento: personaData.fech_nacimiento,
+      celular: personaData.celular,
+    });
 
     const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt); // 🔒
+    const hashedPassword = await bcrypt.hash(comercianteData.password, salt);
 
-    const nuevoUsuario = await Usuarios.create({
-      nombre,
-      email,
-      password: hashedPassword, // almacenas el hash
-      rol_id,
+    const comerciante = await Comerciantes.create({
+      persona_id: persona.id,
+      n_documento: comercianteData.n_documento,
+      nom_comercio: comercianteData.nom_comercio,
+      contacto_wsp: comercianteData.contacto_wsp,
+      password: hashedPassword, // <--- aquí va la contraseña hasheada
+      estado: comercianteData.estado,
+      rol_id: comercianteData.rol_id,
+      creacion_id: comercianteData.creacion_id,
+      act_id: comercianteData.act_id,
+      fech_creacion: comercianteData.fech_creacion,
+      fech_act: comercianteData.fech_act,
     });
 
-    res.status(201).json({
-      ok: true,
-      message: 'Usuario creado con éxito',
-      usuario: {
-        id: nuevoUsuario.id,
-        nombre: nuevoUsuario.nombre,
-        email: nuevoUsuario.email,
-        rol_id: nuevoUsuario.rol_id,
-      
-      },
-    });
+    return { persona, comerciante };
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Error al crear usuario" });
+    throw error;
   }
 };
+
+// Crear persona y usuario
+ const crearPersonaUsuario = async (personaData, usuarioData) => {
+  try {
+    const persona = await Persona.create({
+      nombre: personaData.nombre,
+      apellidos: personaData.apellidos,
+      genero: personaData.genero,
+      fech_nacimiento: personaData.fech_nacimiento,
+      celular: personaData.celular,
+    });
+
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(usuarioData.password, salt);
+
+    const usuario = await Usuarios.create({
+      persona_id: persona.id,
+      n_documento: usuarioData.n_documento,
+      correo: usuarioData.correo,
+      password: hashedPassword,
+      estado: usuarioData.estado,
+      rol_id: usuarioData.rol_id,
+      creacion_id: usuarioData.creacion_id,
+      act_id: usuarioData.act_id,
+      fech_crea: usuarioData.fech_crea,
+      fech_act: usuarioData.fech_act,
+    });
+
+    return { persona, usuario };
+  } catch (error) {
+    throw error;
+  }
+}
+
+export const crearUsuario = async (req, res) => {
+  try {
+    const { tipo, personaData, usuarioData, comercianteData } = req.body;
+
+    // Verifica si el correo ya está registrado (en Usuarios o Comerciantes)
+    let correo = usuarioData?.correo || comercianteData?.correo;
+    if (correo) {
+      const existeCorreoUsuario = await Usuarios.findOne({ where: { correo } });
+      const existeCorreoComerciante = await Comerciantes.findOne({ where: { correo: correo } }); // Si usas correo en Comerciantes
+      if (existeCorreoUsuario || existeCorreoComerciante) {
+        return res.status(400).json({ message: "Correo ya registrado" });
+      }
+    }
+
+    // Verifica si el documento ya está registrado (en Usuarios o Comerciantes)
+    let n_documento = usuarioData?.n_documento || comercianteData?.n_documento;
+    if (n_documento) {
+      const existeDocUsuario = await Usuarios.findOne({ where: { n_documento } });
+      const existeDocComerciante = await Comerciantes.findOne({ where: { n_documento } });
+      if (existeDocUsuario || existeDocComerciante) {
+        return res.status(400).json({ message: "Documento ya registrado" });
+      }
+    }
+
+    if (tipo === "usuario") {
+      const { persona, usuario } = await crearPersonaUsuario(personaData, usuarioData);
+      return res.status(201).json({
+        ok: true,
+        message: 'Usuario creado con éxito',
+        usuario,
+        persona,
+      });
+    }
+
+    if (tipo === "comerciante") {
+      const { persona, comerciante } = await crearPersonaComerciante(personaData, comercianteData);
+      return res.status(201).json({
+        ok: true,
+        message: 'Comerciante creado con éxito',
+        comerciante,
+        persona,
+      });
+    }
+
+    return res.status(400).json({ message: "Tipo no válido" });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Error al crear usuario o comerciante" });
+  }
+};
+
 
 //login de usuario
 export const loginUsuario = async (req, res) => {

@@ -6,5 +6,7 @@ export default (sequelize, DataTypes) => {
     genero: { type: DataTypes.STRING(8), allowNull: false },
     fech_nacimiento: { type: DataTypes.DATE, allowNull: true },
     celular: { type: DataTypes.STRING(10), allowNull: true }
+  }, {
+    freezeTableName: true // <-- evita la pluralización
   });
 };

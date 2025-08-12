@@ -4,8 +4,9 @@ import path from "path";
 import { fileURLToPath } from "url";
 import { syncModels, dbConnection } from "./src/database/syncModels.js";
 import { config } from "./src/config/config.js";
-import usuarioRoutes from "./src/routes/usuario.routes.js";
 import { swaggerUiServe, swaggerUiSetup } from "./src/config/swagger.js";
+import { usuarioRoutes, rolesRoutes, permisosRoutes, rolPermisoRoutes } from "./src/routes/main.routes.js";
+
 
 const app = express();
 
@@ -31,10 +32,11 @@ const publicPath = path.join(__dirname, "src", "public");
 app.use("/public", express.static(publicPath));
 
 // Rutas de la API
-app.use("/api", usuarioRoutes);
 app.use("/api-docs", swaggerUiServe, swaggerUiSetup);
-
-
+app.use("/api", usuarioRoutes);
+app.use("/api", rolesRoutes);
+app.use("/api", permisosRoutes);
+app.use("/api", rolPermisoRoutes);
 
 // Ruta 404
 app.use((req, res, next) => {

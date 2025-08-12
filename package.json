@@ -4,8 +4,8 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-     "dev": "pm2 start index.js --watch --name backend-dev",
-    "start": "pm2 start index.js --name backend",
+ "dev": "NODE_ENV=development DOTENV_CONFIG_PATH=.env.dev pm2 start index.js --watch --name backend-dev",
+"start": "NODE_ENV=production pm2 start index.js --name backend",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

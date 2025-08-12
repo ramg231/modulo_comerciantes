@@ -9,6 +9,9 @@ export default (sequelize, DataTypes) => {
     creacion_id: { type: DataTypes.INTEGER, allowNull: true },
     act_id: { type: DataTypes.INTEGER, allowNull: true },
     fech_creacion: { type: DataTypes.DATE, allowNull: true },
-    fech_act: { type: DataTypes.DATE, allowNull: true }
+    fech_act: { type: DataTypes.DATE, allowNull: true },
+    estado: { type: DataTypes.BOOLEAN, allowNull: true }
+   }, {
+    freezeTableName: true // <-- evita la pluralización
   });
 };

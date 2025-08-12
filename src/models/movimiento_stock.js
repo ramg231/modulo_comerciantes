@@ -6,5 +6,7 @@ export default (sequelize, DataTypes) => {
     motivo: { type: DataTypes.STRING(45), allowNull: true },
     creacion_id: { type: DataTypes.INTEGER, allowNull: true },
     fech_crea: { type: DataTypes.DATE, allowNull: true }
+  }, {
+    freezeTableName: true // <-- evita la pluralización
   });
 };

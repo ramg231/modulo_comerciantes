@@ -3,5 +3,7 @@ export default (sequelize, DataTypes) => {
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
     rol_id: { type: DataTypes.INTEGER, allowNull: false },
     permiso_id: { type: DataTypes.INTEGER, allowNull: false }
+  }, {
+    freezeTableName: true // <-- evita la pluralización
   });
 };

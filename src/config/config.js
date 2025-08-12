@@ -1,8 +1,9 @@
 import dotenv from 'dotenv';
 
 
+
 dotenv.config({
-  path: process.env.NODE_ENV === 'development' ? '.env.dev' : '.env'
+  path: process.env.DOTENV_CONFIG_PATH || (process.env.NODE_ENV === 'development' ? '.env.dev' : '.env')
 });
 
 export const config = {
