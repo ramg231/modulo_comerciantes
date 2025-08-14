@@ -11,15 +11,25 @@ export const validarJWT = (req, res, next) => {
   }
 
   try {
-    const { id, nombre, rol, email } = jwt.verify(
-      token,
-      config.secretJwtSeed // Usar la semilla desde config.js
-    );
+    const {
+      id,
+      nombre,
+      apellidos, // <-- recibe apellidos
+      rol,
+      correo,
+      tipo,
+      nom_comercio, // <-- recibe nom_comercio
+      contacto_wsp, // <-- recibe contacto_wsp
+    } = jwt.verify(token, config.secretJwtSeed); // Usar la semilla desde config.js
 
     req.id = id;
     req.nombre = nombre;
+    req.apellidos = apellidos; // <-- agrega apellidos
     req.rol = rol;
-    req.email = email;
+    req.correo = correo;
+    req.tipo = tipo;
+    req.nom_comercio = nom_comercio; // <-- agrega nom_comercio si aplica
+    req.contacto_wsp = contacto_wsp; // <-- agrega contacto_wsp si aplica
 
     next();
   } catch (error) {

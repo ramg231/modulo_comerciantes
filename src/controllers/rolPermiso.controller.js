@@ -48,7 +48,7 @@ export const obtenerPermisosPorRol = async (req, res) => {
       return res.status(404).json({ message: "No hay permisos asignados a este rol" });
     }
 
-    res.json(asignaciones);
+    res.status(200).json(asignaciones);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Error al obtener permisos del rol" });

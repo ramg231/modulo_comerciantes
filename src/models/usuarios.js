@@ -9,7 +9,7 @@ export default (sequelize, DataTypes) => {
     rol_id: { type: DataTypes.INTEGER, allowNull: false },
     creacion_id: { type: DataTypes.INTEGER, allowNull: true },
     act_id: { type: DataTypes.INTEGER, allowNull: true },
-    fech_crea: { type: DataTypes.DATE, allowNull: true },
+    fech_crea: { type: DataTypes.DATE,  defaultValue: DataTypes.NOW,allowNull: true },
     fech_act: { type: DataTypes.DATE, allowNull: true }
   }, {
    freezeTableName: true,

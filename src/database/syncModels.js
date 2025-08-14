@@ -71,6 +71,11 @@ Usuarios.belongsTo(Persona, { foreignKey: 'persona_id' });
 // Usuarios - Roles
 Usuarios.hasOne(Rol, { foreignKey: 'rol_id' });
 Rol.belongsTo(Usuarios, { foreignKey: 'rol_id' });
+Usuarios.belongsTo(Rol, { foreignKey: 'rol_id' });
+Comerciantes.belongsTo(Rol, { foreignKey: 'rol_id' });
+Rol.hasMany(Usuarios, { foreignKey: 'rol_id' });
+Rol.hasMany(Comerciantes, { foreignKey: 'rol_id' });
+
 
 // Rol - RolPermiso
 Rol.hasMany(RolPermiso, { foreignKey: 'rol_id', as: 'rolPermisos' });
@@ -114,6 +119,10 @@ Pedidodet.belongsTo(Producto, { foreignKey: 'producto_id', as: 'productoRef' });
 //PedidoCab - PedidoDet
 Pedidocab.hasMany(Pedidodet, { foreignKey: 'pedcab_id' });
 Pedidodet.belongsTo(Pedidocab, { foreignKey: 'pedcab_id' });
+
+// En el modelo Comerciantes
+Comerciantes.belongsTo(Rol, { foreignKey: 'rol_id' });
+Rol.hasMany(Comerciantes, { foreignKey: 'rol_id' });
 
 export const db = {
   sequelize,

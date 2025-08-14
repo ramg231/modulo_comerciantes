@@ -13,12 +13,19 @@ router.post('/usuario/crear',crearUsuario);
 router.post('/usuario/login', loginUsuario);
 // Ruta para revalidar el token
 router.get('/usuario/revalidar', validarJWT, revalidarToken);   
+
+// Ruta para actualizar un usuario
+router.put('/usuario/:id/:tipo/:act_id', actualizarUsuario);
+
 // Ruta para listar todos los usuariosnpm
 router.get('/usuario/' ,  listarUsuarios);    
+
+
+
 // Ruta para obtener un usuario por ID
 router.get('/usuario/:id', obtenerUsuario);
-// Ruta para actualizar un usuario
-router.put('/usuario/:id', actualizarUsuario);
+
+
 // Ruta para desactivar un usuario
 router.delete('/usuario/:id', validarJWT, desactivarUsuario);
 // Ruta para activar un usuario (opcional, si se implementa)
